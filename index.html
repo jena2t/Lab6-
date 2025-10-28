@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Web Interactiva</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #7209b7;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .calculator-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .calculator-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .calculator-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .calculator-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .calculator-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: slideUp 0.4s ease;
+        }
+
+        .modal-header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .calculate-btn {
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        }
+
+        .result-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .result-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 0.5rem;
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Calculadora Web Interactiva</h1>
+        <p>Una herramienta moderna para todas tus operaciones matemáticas</p>
+    </header>
+
+    <main>
+        <div class="calculator-grid">
+            <div class="calculator-card" data-operation="suma">
+                <div class="calculator-icon">+</div>
+                <h3>Suma</h3>
+                <p>Realiza operaciones de adición entre dos números</p>
+            </div>
+            
+            <div class="calculator-card" data-operation="resta">
+                <div class="calculator-icon">−</div>
+                <h3>Resta</h3>
+                <p>Realiza operaciones de sustracción entre dos números</p>
+            </div>
+            
+            <div class="calculator-card" data-operation="multiplicacion">
+                <div class="calculator-icon">×</div>
+                <h3>Multiplicación</h3>
+                <p>Realiza operaciones de multiplicación entre dos números</p>
+            </div>
+            
+            <div class="calculator-card" data-operation="division">
+                <div class="calculator-icon">÷</div>
+                <h3>División</h3>
+                <p>Realiza operaciones de división entre dos números</p>
+            </div>
+            
+            <div class="calculator-card" data-operation="potencia">
+                <div class="calculator-icon">xʸ</div>
+                <h3>Potencia</h3>
+                <p>Calcula la potencia de un número elevado a otro</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para Suma -->
+    <div class="modal" id="suma-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Calculadora de Suma</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="suma-num1">Primer número:</label>
+                    <input type="number" id="suma-num1" placeholder="Ingresa el primer número">
+                </div>
+                <div class="input-group">
+                    <label for="suma-num2">Segundo número:</label>
+                    <input type="number" id="suma-num2" placeholder="Ingresa el segundo número">
+                </div>
+                <button class="calculate-btn" id="calcular-suma">Calcular Suma</button>
+                <div class="result-container" id="resultado-suma">
+                    <p>Resultado:</p>
+                    <div class="result-value" id="valor-suma">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Resta -->
+    <div class="modal" id="resta-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Calculadora de Resta</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="resta-num1">Minuendo:</label>
+                    <input type="number" id="resta-num1" placeholder="Ingresa el minuendo">
+                </div>
+                <div class="input-group">
+                    <label for="resta-num2">Sustraendo:</label>
+                    <input type="number" id="resta-num2" placeholder="Ingresa el sustraendo">
+                </div>
+                <button class="calculate-btn" id="calcular-resta">Calcular Resta</button>
+                <div class="result-container" id="resultado-resta">
+                    <p>Resultado:</p>
+                    <div class="result-value" id="valor-resta">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Multiplicación -->
+    <div class="modal" id="multiplicacion-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Calculadora de Multiplicación</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="multiplicacion-num1">Primer factor:</label>
+                    <input type="number" id="multiplicacion-num1" placeholder="Ingresa el primer factor">
+                </div>
+                <div class="input-group">
+                    <label for="multiplicacion-num2">Segundo factor:</label>
+                    <input type="number" id="multiplicacion-num2" placeholder="Ingresa el segundo factor">
+                </div>
+                <button class="calculate-btn" id="calcular-multiplicacion">Calcular Multiplicación</button>
+                <div class="result-container" id="resultado-multiplicacion">
+                    <p>Resultado:</p>
+                    <div class="result-value" id="valor-multiplicacion">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para División -->
+    <div class="modal" id="division-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Calculadora de División</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="division-num1">Dividendo:</label>
+                    <input type="number" id="division-num1" placeholder="Ingresa el dividendo">
+                </div>
+                <div class="input-group">
+                    <label for="division-num2">Divisor:</label>
+                    <input type="number" id="division-num2" placeholder="Ingresa el divisor">
+                </div>
+                <button class="calculate-btn" id="calcular-division">Calcular División</button>
+                <div class="result-container" id="resultado-division">
+                    <p>Resultado:</p>
+                    <div class="result-value" id="valor-division">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Potencia -->
+    <div class="modal" id="potencia-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Calculadora de Potencia</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="potencia-base">Base:</label>
+                    <input type="number" id="potencia-base" placeholder="Ingresa la base">
+                </div>
+                <div class="input-group">
+                    <label for="potencia-exponente">Exponente:</label>
+                    <input type="number" id="potencia-exponente" placeholder="Ingresa el exponente">
+                </div>
+                <button class="calculate-btn" id="calcular-potencia">Calcular Potencia</button>
+                <div class="result-container" id="resultado-potencia">
+                    <p>Resultado:</p>
+                    <div class="result-value" id="valor-potencia">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Calculadora Web Interactiva Multisección &copy; 2023</p>
+    </footer>
+
+    <script>
+        // Configuración de eventos para abrir modales
+        document.querySelectorAll('.calculator-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const operation = card.getAttribute('data-operation');
+                const modal = document.getElementById(`${operation}-modal`);
+                modal.style.display = 'flex';
+            });
+        });
+
+        // Configuración de eventos para cerrar modales
+        document.querySelectorAll('.close-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const modal = button.closest('.modal');
+                modal.style.display = 'none';
+            });
+        });
+
+        // Cerrar modal al hacer clic fuera del contenido
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+
+        // Lógica para la calculadora de suma
+        document.getElementById('calcular-suma').addEventListener('click', () => {
+            const num1 = parseFloat(document.getElementById('suma-num1').value) || 0;
+            const num2 = parseFloat(document.getElementById('suma-num2').value) || 0;
+            const resultado = num1 + num2;
+            
+            document.getElementById('valor-suma').textContent = resultado;
+            document.getElementById('resultado-suma').classList.add('show');
+        });
+
+        // Lógica para la calculadora de resta
+        document.getElementById('calcular-resta').addEventListener('click', () => {
+            const num1 = parseFloat(document.getElementById('resta-num1').value) || 0;
+            const num2 = parseFloat(document.getElementById('resta-num2').value) || 0;
+            const resultado = num1 - num2;
+            
+            document.getElementById('valor-resta').textContent = resultado;
+            document.getElementById('resultado-resta').classList.add('show');
+        });
+
+        // Lógica para la calculadora de multiplicación
+        document.getElementById('calcular-multiplicacion').addEventListener('click', () => {
+            const num1 = parseFloat(document.getElementById('multiplicacion-num1').value) || 0;
+            const num2 = parseFloat(document.getElementById('multiplicacion-num2').value) || 0;
+            const resultado = num1 * num2;
+            
+            document.getElementById('valor-multiplicacion').textContent = resultado;
+            document.getElementById('resultado-multiplicacion').classList.add('show');
+        });
+
+        // Lógica para la calculadora de división
+        document.getElementById('calcular-division').addEventListener('click', () => {
+            const num1 = parseFloat(document.getElementById('division-num1').value) || 0;
+            const num2 = parseFloat(document.getElementById('division-num2').value) || 1;
+            
+            if (num2 === 0) {
+                alert("Error: No se puede dividir por cero");
+                return;
+            }
+            
+            const resultado = num1 / num2;
+            document.getElementById('valor-division').textContent = resultado.toFixed(2);
+            document.getElementById('resultado-division').classList.add('show');
+        });
+
+        // Lógica para la calculadora de potencia
+        document.getElementById('calcular-potencia').addEventListener('click', () => {
+            const base = parseFloat(document.getElementById('potencia-base').value) || 0;
+            const exponente = parseFloat(document.getElementById('potencia-exponente').value) || 0;
+            const resultado = Math.pow(base, exponente);
+            
+            document.getElementById('valor-potencia').textContent = resultado;
+            document.getElementById('resultado-potencia').classList.add('show');
+        });
+
+        // Permitir calcular con la tecla Enter
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const modal = input.closest('.modal');
+                    const calculateBtn = modal.querySelector('.calculate-btn');
+                    calculateBtn.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
