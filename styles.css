@@ -1,31 +1,59 @@
-       :root {
-            --primary: #6366f1;
-            --secondary: #8b5cf6;
-            --accent: #06b6d4;
-            --light: rgba(255, 255, 255, 0.9);
-            --dark: #1e293b;
-            --success: #10b981;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --glass-bg: rgba(255, 255, 255, 0.25);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --backdrop-blur: blur(12px);
+        :root {
+            --space-cadet: #1D2D50;
+            --space-cadet-dark: #152238;
+            --space-cadet-light: #2A3D66;
+            --cyan-azure: #4A90E2;
+            --cyan-azure-light: #6BA8F2;
+            --cyan-azure-dark: #2A70C2;
+            --neon-cyan: #00F5FF;
+            --cosmic-silver: #E8E9EB;
+            --stardust: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --glass-bg: rgba(29, 45, 80, 0.7);
+            --glass-border: rgba(74, 144, 226, 0.3);
+            --backdrop-blur: blur(16px);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Orbitron', 'Segoe UI', system-ui, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: var(--dark);
+            background: linear-gradient(135deg, var(--space-cadet) 0%, var(--space-cadet-dark) 100%);
+            color: var(--cosmic-silver);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             padding: 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Estrellas de fondo */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 4s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
         }
 
         header {
@@ -34,13 +62,14 @@
             -webkit-backdrop-filter: var(--backdrop-blur);
             border: 1px solid var(--glass-border);
             color: white;
-            padding: 2.5rem 1rem;
+            padding: 3rem 1rem;
             text-align: center;
             box-shadow: var(--shadow);
-            border-radius: 20px;
+            border-radius: 24px;
             margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
+            border-bottom: 2px solid var(--cyan-azure);
         }
 
         header::before {
@@ -49,24 +78,32 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            animation: scanline 3s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         header h1 {
-            font-size: 2.8rem;
-            margin-bottom: 0.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff 0%, #e2e8f0 100%);
+            font-size: 3.2rem;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--cyan-azure) 0%, var(--neon-cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-shadow: 0 0 20px rgba(74, 144, 226, 0.5);
+            letter-spacing: 2px;
         }
 
         header p {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             opacity: 0.9;
             font-weight: 300;
+            color: var(--cosmic-silver);
         }
 
         main {
@@ -79,9 +116,9 @@
 
         .calculator-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 1.5rem;
         }
 
         .calculator-card {
@@ -90,7 +127,7 @@
             -webkit-backdrop-filter: var(--backdrop-blur);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 2.5rem 2rem;
+            padding: 3rem 2rem;
             text-align: center;
             box-shadow: var(--shadow);
             transition: var(--transition);
@@ -106,7 +143,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.2), transparent);
             transition: var(--transition);
         }
 
@@ -115,31 +152,41 @@
         }
 
         .calculator-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            border-color: var(--cyan-azure);
+            box-shadow: 0 0 30px rgba(74, 144, 226, 0.3);
         }
 
         .calculator-icon {
-            font-size: 3.5rem;
+            font-size: 4rem;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--cyan-azure), var(--neon-cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 0 10px rgba(74, 144, 226, 0.5));
+            transition: var(--transition);
+        }
+
+        .calculator-card:hover .calculator-icon {
+            transform: scale(1.2) rotate(5deg);
+            filter: drop-shadow(0 0 15px rgba(0, 245, 255, 0.7));
         }
 
         .calculator-card h3 {
-            font-size: 1.6rem;
-            margin-bottom: 1rem;
-            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+            color: var(--cosmic-silver);
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .calculator-card p {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(232, 233, 235, 0.8);
             line-height: 1.6;
             font-weight: 300;
+            font-size: 1.1rem;
         }
 
         .modal {
@@ -149,36 +196,49 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(21, 34, 56, 0.95);
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            animation: fadeIn 0.4s ease;
+            animation: fadeIn 0.5s ease;
             padding: 1rem;
         }
 
         .modal-content {
-            background: var(--glass-bg);
+            background: var(--space-cadet-light);
             backdrop-filter: var(--backdrop-blur);
             -webkit-backdrop-filter: var(--backdrop-blur);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
+            border: 2px solid var(--cyan-azure);
+            border-radius: 20px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
             overflow: hidden;
-            animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(0, 245, 255, 0.05));
+            pointer-events: none;
         }
 
         .modal-header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--space-cadet), var(--cyan-azure-dark));
             color: white;
-            padding: 1.8rem;
+            padding: 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: relative;
             overflow: hidden;
+            border-bottom: 1px solid var(--cyan-azure);
         }
 
         .modal-header::after {
@@ -188,23 +248,26 @@
             left: 0;
             right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
         }
 
         .modal-header h2 {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 600;
+            background: linear-gradient(135deg, var(--cosmic-silver), var(--cyan-azure-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .close-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
+            background: rgba(74, 144, 226, 0.3);
+            border: 1px solid var(--cyan-azure);
+            color: var(--cosmic-silver);
             font-size: 1.8rem;
             cursor: pointer;
             transition: var(--transition);
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -213,61 +276,71 @@
 
         .close-btn:hover {
             transform: scale(1.1) rotate(90deg);
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(74, 144, 226, 0.5);
+            box-shadow: 0 0 15px var(--cyan-azure);
+            color: var(--neon-cyan);
         }
 
         .modal-body {
-            padding: 2.5rem 2rem;
+            padding: 3rem 2.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         .input-group {
-            margin-bottom: 1.8rem;
+            margin-bottom: 2rem;
         }
 
         .input-group label {
             display: block;
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
             font-weight: 500;
-            color: white;
-            font-size: 1.1rem;
+            color: var(--cosmic-silver);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .input-group input {
             width: 100%;
-            padding: 1rem 1.2rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1.2rem 1.5rem;
+            background: rgba(21, 34, 56, 0.8);
+            border: 2px solid var(--cyan-azure);
             border-radius: 12px;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             transition: var(--transition);
-            color: white;
+            color: var(--cosmic-silver);
+            font-family: 'Orbitron', monospace;
         }
 
         .input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(232, 233, 235, 0.5);
         }
 
         .input-group input:focus {
-            border-color: rgba(255, 255, 255, 0.5);
+            border-color: var(--neon-cyan);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
-            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+            background: rgba(21, 34, 56, 0.9);
         }
 
         .calculate-btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--cyan-azure), var(--cyan-azure-dark));
             color: white;
             border: none;
-            padding: 1.2rem 2rem;
+            padding: 1.4rem 2.5rem;
             border-radius: 12px;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             width: 100%;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             position: relative;
             overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Orbitron', monospace;
         }
 
         .calculate-btn::before {
@@ -277,7 +350,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.4), transparent);
             transition: var(--transition);
         }
 
@@ -287,37 +360,59 @@
 
         .calculate-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.4);
+            background: linear-gradient(135deg, var(--cyan-azure-light), var(--cyan-azure));
         }
 
         .result-container {
             margin-top: 2.5rem;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 2.5rem;
+            background: rgba(21, 34, 56, 0.8);
             border-radius: 16px;
             text-align: center;
             display: none;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--cyan-azure);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
         }
 
         .result-container.show {
             display: block;
-            animation: fadeIn 0.6s ease;
+            animation: resultAppear 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes resultAppear {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .result-container p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
+            color: var(--cosmic-silver);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .result-value {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--accent), var(--success));
+            background: linear-gradient(135deg, var(--neon-cyan), var(--cyan-azure-light));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 0 10px rgba(0, 245, 255, 0.5));
+            font-family: 'Orbitron', monospace;
         }
 
         footer {
@@ -325,11 +420,17 @@
             backdrop-filter: var(--backdrop-blur);
             -webkit-backdrop-filter: var(--backdrop-blur);
             border: 1px solid var(--glass-border);
-            color: white;
+            color: var(--cosmic-silver);
             text-align: center;
-            padding: 1.5rem;
+            padding: 2rem;
             margin-top: 3rem;
             border-radius: 16px;
+            border-top: 2px solid var(--cyan-azure);
+        }
+
+        footer p {
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
 
         @keyframes fadeIn {
@@ -338,7 +439,7 @@
         }
 
         @keyframes slideUp {
-            from { transform: translateY(60px) scale(0.9); opacity: 0; }
+            from { transform: translateY(80px) scale(0.9); opacity: 0; }
             to { transform: translateY(0) scale(1); opacity: 1; }
         }
 
@@ -348,49 +449,18 @@
             }
             
             header h1 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
             }
             
             .calculator-card {
-                padding: 2rem 1.5rem;
+                padding: 2.5rem 1.5rem;
             }
             
             .modal-body {
-                padding: 2rem 1.5rem;
+                padding: 2.5rem 1.5rem;
             }
-        }
-
-        /* Efectos de partículas en el fondo */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 15s infinite linear;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
+            
+            .result-value {
+                font-size: 2.5rem;
             }
         }
