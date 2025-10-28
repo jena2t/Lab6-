@@ -1,25 +1,27 @@
- // Crear partículas para el fondo
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 20;
+  // Crear estrellas de fondo
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 150;
             
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
                 
                 // Tamaño y posición aleatorios
-                const size = Math.random() * 60 + 10;
+                const size = Math.random() * 3 + 1;
                 const posX = Math.random() * 100;
-                const delay = Math.random() * 15;
-                const duration = Math.random() * 10 + 15;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 3 + 2;
                 
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${posX}%`;
-                particle.style.animationDelay = `${delay}s`;
-                particle.style.animationDuration = `${duration}s`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${posX}%`;
+                star.style.top = `${posY}%`;
+                star.style.animationDelay = `${delay}s`;
+                star.style.animationDuration = `${duration}s`;
                 
-                particlesContainer.appendChild(particle);
+                starsContainer.appendChild(star);
             }
         }
 
@@ -85,7 +87,7 @@
             const num2 = parseFloat(document.getElementById('division-num2').value) || 1;
             
             if (num2 === 0) {
-                alert("Error: No se puede dividir por cero");
+                alert("ERROR: División por cero detectada. Sistema orbital comprometido.");
                 return;
             }
             
@@ -115,5 +117,5 @@
             });
         });
 
-        // Inicializar partículas al cargar la página
-        document.addEventListener('DOMContentLoaded', createParticles);
+        // Inicializar estrellas al cargar la página
+        document.addEventListener('DOMContentLoaded', createStars);
